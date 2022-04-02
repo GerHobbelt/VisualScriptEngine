@@ -5,6 +5,9 @@
 #include "NE_SingleValues.hpp"
 #include "TestNodes.hpp"
 
+#include <random>
+#include <algorithm>
+
 using namespace NE;
 
 namespace NodeManagerManualUpdateTest
@@ -263,8 +266,12 @@ TEST (ManualUpdateTest_RandomForced)
 			[&] () { manager.ConnectOutputSlotToInputSlot (incNode2->GetOutputSlot (SlotId ("out")), incNode3->GetInputSlot (SlotId ("in"))); }
 		};
 
-		std::random_shuffle (addOps.begin (), addOps.end ());
-		std::random_shuffle (connectOps.begin (), connectOps.end ());
+		// sample random generator
+		std::random_device rd;
+		std::mt19937 g(rd());
+
+		std::shuffle (addOps.begin (), addOps.end (), g);
+		std::shuffle (connectOps.begin (), connectOps.end (), g);
 
 		for (auto& it : addOps) {
 			it ();
